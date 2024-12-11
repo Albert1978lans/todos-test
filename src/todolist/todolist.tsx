@@ -13,6 +13,8 @@ const initialTasks: tasksType = [
     {id: v1(), checked: false, title: 'Тестовое задание'},
     {id: v1(), checked: false, title: 'Прекрасный код'},
     {id: v1(), checked: false, title: 'Покрытие тестами'},
+    {id: v1(), checked: false, title: 'sssssssssssssss'},
+    {id: v1(), checked: false, title: 'gggggggggggggggg'},
 ]
 
 type ChangeTaskStatusActionType = {
@@ -45,7 +47,6 @@ function tasksReducer(state: tasksType, action: ActionsType) {
 export function Todolist() {
 
 
-
     const [tasks, dispatch] = useReducer(
         tasksReducer,
         initialTasks
@@ -53,8 +54,7 @@ export function Todolist() {
 
     const [input, setInput] = useState('')
     const [activeTasks, setActiveTasks] = useState<number>(0)
-
-
+    const [taskFilter, setTaskFilter] = useState<'all' | 'active' | 'completed'>('all')
 
     const createTask = (title: string) => {
         dispatch({type: 'CREATE-TASK', title})
@@ -69,11 +69,20 @@ export function Todolist() {
 
     useEffect(() => {
         let activeTasks = tasks.reduce((acc, task) => {
-            if (!task.checked) return acc += 1
+            if (!task.checked) return acc + 1
             return acc
-        } , 0)
+        }, 0)
         setActiveTasks(activeTasks)
-    }, [] )
+    }, [])
+
+    let filteredTasks: tasksType
+    if (taskFilter === 'all') {
+        filteredTasks = tasks.filter(task => task)
+    } else if (taskFilter === 'active') {
+        filteredTasks = tasks.filter(task => !task.checked)
+    } else {
+        filteredTasks = tasks.filter(task => task.checked)
+    }
 
     return (
         <div className={s.wrapper}>
@@ -98,7 +107,7 @@ export function Todolist() {
                         onBlur={(event) => {
                             createTask(input)
                         }}
-                        onKeyPress={(event) =>{
+                        onKeyPress={(event) => {
                             if (event.key === 'Enter') createTask(input)
 
                         }}
@@ -107,7 +116,7 @@ export function Todolist() {
                 </div>
 
                 <div>
-                    {tasks.map(task => <Task
+                    {filteredTasks.map(task => <Task
                         key={task.id}
                         id={task.id}
                         checked={task.checked}
@@ -118,9 +127,21 @@ export function Todolist() {
                 <div className={s.buttons}>
                     <div>{activeTasks} items left</div>
                     <div>
-                        <Button variant="outlined" color={'inherit'}>All</Button>
-                        <Button variant="text" color={'inherit'}>Active</Button>
-                        <Button variant="text" color={'inherit'}>Completed</Button>
+                        <Button
+                            variant={taskFilter === 'all' ? 'outlined' : 'text'}
+                            color={'inherit'}
+                            onClick={() => setTaskFilter('all')}
+                        >All</Button>
+                        <Button
+                            variant={taskFilter === 'active' ? 'outlined' : 'text'}
+                            color={'inherit'}
+                            onClick={() => setTaskFilter('active')}
+                        >Active</Button>
+                        <Button
+                            variant={taskFilter === 'completed' ? 'outlined' : 'text'}
+                            color={'inherit'}
+                            onClick={() => setTaskFilter('completed')}
+                        >Completed</Button>
                     </div>
                     <div>
                         <Button variant="text"
@@ -136,33 +157,38 @@ export function Todolist() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-{/*<TextField*/}
-{/*    id="input-with-icon-textfield"*/}
-{/*    sx={{ paddingTop: '15px', paddingBottom: '15px' , fontSize: '25px' }}*/}
-{/*    fullWidth*/}
-{/*    placeholder={'What needs to be done?'}*/}
-{/*    size="medium"*/}
-{/*    slotProps={{*/}
-{/*        input: {*/}
-{/*            startAdornment: (*/}
-{/*                <InputAdornment position="start">*/}
-{/*                    <ExpandMoreIcon />*/}
-{/*                </InputAdornment>*/}
-{/*            ),*/}
-{/*        },*/}
-{/*    }}*/}
-{/*    variant="standard"*/}
-{/*/>*/}
+{/*<TextField*/
+}
+{/*    id="input-with-icon-textfield"*/
+}
+{/*    sx={{ paddingTop: '15px', paddingBottom: '15px' , fontSize: '25px' }}*/
+}
+{/*    fullWidth*/
+}
+{/*    placeholder={'What needs to be done?'}*/
+}
+{/*    size="medium"*/
+}
+{/*    slotProps={{*/
+}
+{/*        input: {*/
+}
+{/*            startAdornment: (*/
+}
+{/*                <InputAdornment position="start">*/
+}
+{/*                    <ExpandMoreIcon />*/
+}
+{/*                </InputAdornment>*/
+}
+{/*            ),*/
+}
+{/*        },*/
+}
+{/*    }}*/
+}
+{/*    variant="standard"*/
+}
+{/*/>*/
+}
 
