@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #bbb8b8;
+}
+.checkbox {
+    width: 12%;
+}
+.title {
+    font-size: 30px;
+    font-weight: 300;
+    color: #3f3a3a;
+}
+.titleActive {
+    font-size: 30px;
+    font-weight: 300;
+    color: #3f3a3a;
+}
+.titleCompleted {
+    text-decoration: line-through;
+    color: darkgray;
+}
