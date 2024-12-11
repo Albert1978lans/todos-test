@@ -5,7 +5,7 @@ import {InputAdornment} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 // import TextField from '@mui/material/TextField';
-import React, {ChangeEvent, useReducer, useState} from "react";
+import React, {ChangeEvent, useEffect, useReducer, useState} from "react";
 import {v1} from 'uuid';
 
 type tasksType = Array<{ id: string, checked: boolean, title: string }>
@@ -15,15 +15,16 @@ const initialTasks: tasksType = [
     {id: v1(), checked: false, title: 'Покрытие тестами'},
 ]
 
-export type ChangeTaskStatusActionType = {
+type ChangeTaskStatusActionType = {
     type: 'CHANGE-TASK-STATUS'
     taskId: string
     status: boolean
 }
-export type CreateTaskActionType = {
+type CreateTaskActionType = {
     type: 'CREATE-TASK'
     title: string
 }
+
 type ActionsType = ChangeTaskStatusActionType
     | CreateTaskActionType
 
@@ -43,21 +44,36 @@ function tasksReducer(state: tasksType, action: ActionsType) {
 
 export function Todolist() {
 
+
+
     const [tasks, dispatch] = useReducer(
         tasksReducer,
         initialTasks
     );
 
     const [input, setInput] = useState('')
+    const [activeTasks, setActiveTasks] = useState<number>(0)
+
+
 
     const createTask = (title: string) => {
         dispatch({type: 'CREATE-TASK', title})
         setInput('')
+        setActiveTasks(activeTasks + 1)
     }
 
     const changeStatus = (status: boolean, taskId: string) => {
         dispatch({type: 'CHANGE-TASK-STATUS', status: status, taskId: taskId})
+        setActiveTasks(status ? activeTasks - 1 : activeTasks + 1)
     }
+
+    useEffect(() => {
+        let activeTasks = tasks.reduce((acc, task) => {
+            if (!task.checked) return acc += 1
+            return acc
+        } , 0)
+        setActiveTasks(activeTasks)
+    }, [] )
 
     return (
         <div className={s.wrapper}>
@@ -100,7 +116,7 @@ export function Todolist() {
                     />)}
                 </div>
                 <div className={s.buttons}>
-                    <div>{2} items left</div>
+                    <div>{activeTasks} items left</div>
                     <div>
                         <Button variant="outlined" color={'inherit'}>All</Button>
                         <Button variant="text" color={'inherit'}>Active</Button>
