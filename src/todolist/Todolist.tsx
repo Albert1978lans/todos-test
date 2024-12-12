@@ -4,11 +4,10 @@ import Input from '@mui/material/Input';
 import {InputAdornment} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
-// import TextField from '@mui/material/TextField';
 import React, {ChangeEvent, useEffect, useReducer, useState} from "react";
 import {v1} from 'uuid';
 
-type tasksType = Array<{ id: string, checked: boolean, title: string }>
+export type tasksType = Array<{ id: string, checked: boolean, title: string }>
 const initialTasks: tasksType = [
     {id: v1(), checked: false, title: 'Тестовое задание'},
     {id: v1(), checked: false, title: 'Прекрасный код'},
@@ -17,7 +16,7 @@ const initialTasks: tasksType = [
     {id: v1(), checked: false, title: 'gggggggggggggggg'},
 ]
 
-type ChangeTaskStatusActionType = {
+export type ChangeTaskStatusActionType = {
     type: 'CHANGE-TASK-STATUS'
     taskId: string
     status: boolean
@@ -26,12 +25,16 @@ type CreateTaskActionType = {
     type: 'CREATE-TASK'
     title: string
 }
+type ClearCompletedActionType = {
+    type: 'CLEAR-COMPLETED'
+}
 
-type ActionsType = ChangeTaskStatusActionType
+
+export type ActionsType = ChangeTaskStatusActionType
     | CreateTaskActionType
+    | ClearCompletedActionType
 
-
-function tasksReducer(state: tasksType, action: ActionsType) {
+export function tasksReducer(state: tasksType, action: ActionsType) {
     switch (action.type) {
         case 'CHANGE-TASK-STATUS':
             return state.map(task => {
@@ -39,6 +42,8 @@ function tasksReducer(state: tasksType, action: ActionsType) {
             })
         case 'CREATE-TASK':
             return [...state, {id: v1(), checked: false, title: action.title}]
+        case "CLEAR-COMPLETED":
+            return state.filter(task => !task.checked)
         default:
             return state
     }
@@ -65,6 +70,9 @@ export function Todolist() {
     const changeStatus = (status: boolean, taskId: string) => {
         dispatch({type: 'CHANGE-TASK-STATUS', status: status, taskId: taskId})
         setActiveTasks(status ? activeTasks - 1 : activeTasks + 1)
+    }
+    const clearCompleted = () => {
+        dispatch({type: 'CLEAR-COMPLETED'})
     }
 
     useEffect(() => {
@@ -104,7 +112,7 @@ export function Todolist() {
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setInput(event.target.value);
                         }}
-                        onBlur={(event) => {
+                        onBlur={() => {
                             createTask(input)
                         }}
                         onKeyPress={(event) => {
@@ -144,8 +152,10 @@ export function Todolist() {
                         >Completed</Button>
                     </div>
                     <div>
-                        <Button variant="text"
+                        <Button
+                            variant="text"
                                 color={'inherit'}
+                            onClick={() => clearCompleted()}
                         >Clear completed</Button>
                     </div>
                 </div>
@@ -156,39 +166,4 @@ export function Todolist() {
     )
 }
 
-
-{/*<TextField*/
-}
-{/*    id="input-with-icon-textfield"*/
-}
-{/*    sx={{ paddingTop: '15px', paddingBottom: '15px' , fontSize: '25px' }}*/
-}
-{/*    fullWidth*/
-}
-{/*    placeholder={'What needs to be done?'}*/
-}
-{/*    size="medium"*/
-}
-{/*    slotProps={{*/
-}
-{/*        input: {*/
-}
-{/*            startAdornment: (*/
-}
-{/*                <InputAdornment position="start">*/
-}
-{/*                    <ExpandMoreIcon />*/
-}
-{/*                </InputAdornment>*/
-}
-{/*            ),*/
-}
-{/*        },*/
-}
-{/*    }}*/
-}
-{/*    variant="standard"*/
-}
-{/*/>*/
-}
 

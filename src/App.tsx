@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
-import {Todolist} from "./todolist/todolist";
-import {v1} from "uuid";
+import {Todolist} from "./todolist/Todolist";
 
 function App() {
   return (

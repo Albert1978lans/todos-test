@@ -2,7 +2,7 @@ import Checkbox from '@mui/material/Checkbox';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import s from './task.module.css'
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent} from "react";
 
 type PropsType = {
     id: string
