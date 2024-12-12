@@ -4,16 +4,14 @@ import Input from '@mui/material/Input';
 import {InputAdornment} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
-import React, {ChangeEvent, useEffect, useReducer, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useReducer, useState} from "react";
 import {v1} from 'uuid';
 
 export type tasksType = Array<{ id: string, checked: boolean, title: string }>
 const initialTasks: tasksType = [
     {id: v1(), checked: false, title: 'Тестовое задание'},
-    {id: v1(), checked: false, title: 'Прекрасный код'},
+    {id: v1(), checked: true, title: 'Прекрасный код'},
     {id: v1(), checked: false, title: 'Покрытие тестами'},
-    {id: v1(), checked: false, title: 'sssssssssssssss'},
-    {id: v1(), checked: false, title: 'gggggggggggggggg'},
 ]
 
 export type ChangeTaskStatusActionType = {
@@ -67,10 +65,11 @@ export function Todolist() {
         setActiveTasks(activeTasks + 1)
     }
 
-    const changeStatus = (status: boolean, taskId: string) => {
+    const changeStatus = useCallback( (status: boolean, taskId: string) => {
         dispatch({type: 'CHANGE-TASK-STATUS', status: status, taskId: taskId})
         setActiveTasks(status ? activeTasks - 1 : activeTasks + 1)
-    }
+    }, [])
+
     const clearCompleted = () => {
         dispatch({type: 'CLEAR-COMPLETED'})
     }

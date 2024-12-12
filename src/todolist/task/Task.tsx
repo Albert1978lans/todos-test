@@ -2,7 +2,7 @@ import Checkbox from '@mui/material/Checkbox';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import s from './task.module.css'
-import {ChangeEvent} from "react";
+import {ChangeEvent, memo} from "react";
 
 type PropsType = {
     id: string
@@ -11,11 +11,12 @@ type PropsType = {
     changeStatus: (status: boolean, taskId: string) =>void
 }
 
-export const Task = (props: PropsType) => {
+export const Task = memo(function Task(props: PropsType) {
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         props.changeStatus(event.target.checked, props.id);
-    };
+    }
+    // console.log('Task', new Date().toLocaleTimeString())
 
   return (
       <div className={s.wrapper}>
@@ -33,4 +34,4 @@ export const Task = (props: PropsType) => {
 
       </div>
   )
-}
+})
